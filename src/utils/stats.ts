@@ -1,0 +1,78 @@
+import type { DrinkEntry } from '../types';
+import { startOfWeek, endOfWeek, differenceInWeeks, isWithinInterval, subWeeks, eachDayOfInterval, format, isSameDay } from 'date-fns';
+
+export function getStats(entries: DrinkEntry[]) {
+  if (entries.length === 0) {
+    return { totalThisWeek: 0, averagePerWeek: 0 };
+  }
+
+  const now = new Date();
+  const weekStart = startOfWeek(now, { weekStartsOn: 1 }); // Monday start
+  const weekEnd = endOfWeek(now, { weekStartsOn: 1 });
+
+  // Drinks this week
+  const thisWeekEntries = entries.filter((entry) => {
+    const entryDate = new Date(entry.timestamp);
+    return isWithinInterval(entryDate, { start: weekStart, end: weekEnd });
+  });
+
+  // Average per week
+  const oldestDate = entries.reduce((oldest, current) => {
+    const d = new Date(current.timestamp);
+    return d < oldest ? d : oldest;
+  }, new Date(entries[0].timestamp));
+
+  let weeksSpan = differenceInWeeks(now, oldestDate);
+  if (weeksSpan < 1) {
+    weeksSpan = 1;
+  }
+
+  const averagePerWeek = entries.length / weeksSpan;
+
+  return {
+    totalThisWeek: thisWeekEntries.length,
+    averagePerWeek: averagePerWeek.toFixed(1)
+  };
+}
+
+export interface DailyCount {
+  dateLabel: string;
+  count: number;
+}
+
+export interface WeeklyReport {
+  label: string;
+  total: number;
+  days: DailyCount[];
+}
+
+export function getHistoricalReports(entries: DrinkEntry[], weeksBack = 3): WeeklyReport[] {
+  const reports: WeeklyReport[] = [];
+  const now = new Date();
+
+  // Loop through past N weeks (1 = last week, 2 = week before that)
+  for (let i = 1; i <= weeksBack; i++) {
+    const targetDate = subWeeks(now, i);
+    const start = startOfWeek(targetDate, { weekStartsOn: 1 });
+    const end = endOfWeek(targetDate, { weekStartsOn: 1 });
+
+    const daysInterval = eachDayOfInterval({ start, end });
+    const days: DailyCount[] = daysInterval.map(day => {
+      const dayEntries = entries.filter(e => isSameDay(new Date(e.timestamp), day));
+      return {
+        dateLabel: format(day, 'EEE'), // e.g., Mon, Tue
+        count: dayEntries.length
+      };
+    });
+
+    const total = days.reduce((sum, d) => sum + d.count, 0);
+    
+    reports.push({
+      label: i === 1 ? 'Last Week' : `${i} Weeks Ago`,
+      total,
+      days
+    });
+  }
+
+  return reports;
+}
