@@ -3,7 +3,7 @@ import { startOfWeek, endOfWeek, differenceInWeeks, isWithinInterval, subWeeks, 
 
 export function getStats(entries: DrinkEntry[]) {
   if (entries.length === 0) {
-    return { totalThisWeek: 0, averagePerWeek: 0, totalToday: 0, totalLastWeekSameDay: 0 };
+    return { totalThisWeek: 0, totalLastWeek: 0, totalToday: 0, totalLastWeekSameDay: 0 };
   }
 
   const now = new Date();
@@ -16,18 +16,14 @@ export function getStats(entries: DrinkEntry[]) {
     return isWithinInterval(entryDate, { start: weekStart, end: weekEnd });
   });
 
-  // Average per week
-  const oldestDate = entries.reduce((oldest, current) => {
-    const d = new Date(current.timestamp);
-    return d < oldest ? d : oldest;
-  }, new Date(entries[0].timestamp));
-
-  let weeksSpan = differenceInWeeks(now, oldestDate);
-  if (weeksSpan < 1) {
-    weeksSpan = 1;
-  }
-
-  const averagePerWeek = entries.length / weeksSpan;
+  // Drinks last week
+  const lastWeekStart = startOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
+  const lastWeekEnd = endOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
+  const lastWeekEntries = entries.filter((entry) => {
+    const entryDate = new Date(entry.timestamp);
+    return isWithinInterval(entryDate, { start: lastWeekStart, end: lastWeekEnd });
+  });
+  const totalLastWeek = lastWeekEntries.length;
 
   const todayEntries = entries.filter((entry) => isSameDay(new Date(entry.timestamp), now));
   const totalToday = todayEntries.length;
@@ -38,7 +34,7 @@ export function getStats(entries: DrinkEntry[]) {
 
   return {
     totalThisWeek: thisWeekEntries.length,
-    averagePerWeek: averagePerWeek.toFixed(1),
+    totalLastWeek,
     totalToday,
     totalLastWeekSameDay
   };

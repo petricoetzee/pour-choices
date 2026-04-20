@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
-import { Beer, Wine, Martini, Coffee, PlusCircle, Trash2 } from 'lucide-react';
+import { Beer, Wine, Martini, GlassWater, PlusCircle, Trash2 } from 'lucide-react';
 
 import type { DrinkType } from './types';
 import { useStorage } from './hooks/useStorage';
@@ -15,7 +15,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingDrinkType, setPendingDrinkType] = useState<DrinkType | null>(null);
 
-  const { totalThisWeek, averagePerWeek, totalToday, totalLastWeekSameDay } = getStats(entries);
+  const { totalThisWeek, totalLastWeek, totalToday, totalLastWeekSameDay } = getStats(entries);
 
   const handleQuickAdd = (type: DrinkType) => {
     setPendingDrinkType(type);
@@ -41,7 +41,7 @@ function App() {
     <div>
       <div className="glass-panel text-center mb-4 title-card">
         <h1 className="neon-text">Pour Choices</h1>
-        <p className="subtitle mt-4">For the refined (and unrefined) palate.</p>
+        <p className="subtitle mt-4">Because for every action there is a reaction.</p>
       </div>
 
       <div className="stats-grid">
@@ -51,15 +51,15 @@ function App() {
         </div>
         <div className="glass-panel stat-card">
           <div className="stat-value">{totalLastWeekSameDay}</div>
-          <div className="stat-label">Last Week Same Day</div>
+          <div className="stat-label">This day last week</div>
         </div>
         <div className="glass-panel stat-card">
           <div className="stat-value">{totalThisWeek}</div>
           <div className="stat-label">This Week</div>
         </div>
         <div className="glass-panel stat-card">
-          <div className="stat-value">{averagePerWeek}</div>
-          <div className="stat-label">Avg / Wk</div>
+          <div className="stat-value">{totalLastWeek}</div>
+          <div className="stat-label">Last week</div>
         </div>
       </div>
 
@@ -77,7 +77,7 @@ function App() {
           <span>Gin</span>
         </button>
         <button className="drink-btn btn-other" onClick={() => handleQuickAdd('Other')}>
-          <Coffee />
+          <GlassWater />
           <span>Other</span>
         </button>
       </div>

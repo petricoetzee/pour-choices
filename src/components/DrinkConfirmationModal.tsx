@@ -18,7 +18,13 @@ const QUOTES = [
   "Observe the craving, and let it pass like a cloud.",
   "You don't need a drink to feel complete right now.",
   "Notice how you feel in this very moment. Is it enough?",
-  "Drink in the present, without pouring another glass."
+  "Drink in the present, without pouring another glass.",
+  "Consider the weight of tomorrow morning.",
+  "Will you thank yourself for this one?",
+  "The best nights are those you fully remember.",
+  "You've had enough to be happy, why risk anything else?",
+  "Is it thirst, habit, or emotion?",
+  "Embrace the clarity of saying no."
 ];
 
 export function DrinkConfirmationModal({ isOpen, drinkType, onConfirm, onCancel }: DrinkConfirmationModalProps) {

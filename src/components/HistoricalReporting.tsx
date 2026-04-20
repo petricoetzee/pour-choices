@@ -53,7 +53,7 @@ function ReportCard({ report }: { report: WeeklyReport }) {
 }
 
 export function HistoricalReporting({ entries }: Props) {
-  const reports = getHistoricalReports(entries, 3); // showing up to 3 weeks back
+  const reports = getHistoricalReports(entries, 4); // showing up to 4 weeks back
 
   return (
     <div className="historical-reports mt-4 mb-4">
