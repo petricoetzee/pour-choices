@@ -14,7 +14,11 @@ const QUOTES = [
   "Mindful drinking is about quality, not quantity.",
   "Your future self is watching you through memories.",
   "A momentary pause can prevent a morning's regret.",
-  "Will the next drink add to the joy of the evening?"
+  "Will the next drink add to the joy of the evening?",
+  "Observe the craving, and let it pass like a cloud.",
+  "You don't need a drink to feel complete right now.",
+  "Notice how you feel in this very moment. Is it enough?",
+  "Drink in the present, without pouring another glass."
 ];
 
 export function DrinkConfirmationModal({ isOpen, drinkType, onConfirm, onCancel }: DrinkConfirmationModalProps) {

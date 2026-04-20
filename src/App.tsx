@@ -11,11 +11,11 @@ import { HistoricalReporting } from './components/HistoricalReporting';
 import { DrinkConfirmationModal } from './components/DrinkConfirmationModal';
 
 function App() {
-  const { entries, addEntry, removeEntry } = useStorage();
+  const { entries, addEntry, removeEntry, clearAllEntries } = useStorage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingDrinkType, setPendingDrinkType] = useState<DrinkType | null>(null);
 
-  const { totalThisWeek, averagePerWeek } = getStats(entries);
+  const { totalThisWeek, averagePerWeek, totalToday, totalLastWeekSameDay } = getStats(entries);
 
   const handleQuickAdd = (type: DrinkType) => {
     setPendingDrinkType(type);
@@ -45,6 +45,14 @@ function App() {
       </div>
 
       <div className="stats-grid">
+        <div className="glass-panel stat-card">
+          <div className="stat-value">{totalToday}</div>
+          <div className="stat-label">Today</div>
+        </div>
+        <div className="glass-panel stat-card">
+          <div className="stat-value">{totalLastWeekSameDay}</div>
+          <div className="stat-label">Last Week Same Day</div>
+        </div>
         <div className="glass-panel stat-card">
           <div className="stat-value">{totalThisWeek}</div>
           <div className="stat-label">This Week</div>
@@ -125,6 +133,20 @@ function App() {
       </div>
 
       <HistoricalReporting entries={entries} />
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', marginBottom: '2rem' }}>
+        <button 
+          className="btn" 
+          style={{ background: 'transparent', border: '1px solid rgba(239, 68, 68, 0.5)', color: '#ef4444' }}
+          onClick={() => {
+            if (window.confirm("Are you sure you want to reset everything back to zero? This cannot be undone.")) {
+              clearAllEntries();
+            }
+          }}
+        >
+          Reset All Data
+        </button>
+      </div>
 
       <RetrospectiveModal 
         isOpen={isModalOpen} 

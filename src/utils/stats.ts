@@ -3,7 +3,7 @@ import { startOfWeek, endOfWeek, differenceInWeeks, isWithinInterval, subWeeks, 
 
 export function getStats(entries: DrinkEntry[]) {
   if (entries.length === 0) {
-    return { totalThisWeek: 0, averagePerWeek: 0 };
+    return { totalThisWeek: 0, averagePerWeek: 0, totalToday: 0, totalLastWeekSameDay: 0 };
   }
 
   const now = new Date();
@@ -29,9 +29,18 @@ export function getStats(entries: DrinkEntry[]) {
 
   const averagePerWeek = entries.length / weeksSpan;
 
+  const todayEntries = entries.filter((entry) => isSameDay(new Date(entry.timestamp), now));
+  const totalToday = todayEntries.length;
+
+  const lastWeekSameDay = subWeeks(now, 1);
+  const lastWeekSameDayEntries = entries.filter((entry) => isSameDay(new Date(entry.timestamp), lastWeekSameDay));
+  const totalLastWeekSameDay = lastWeekSameDayEntries.length;
+
   return {
     totalThisWeek: thisWeekEntries.length,
-    averagePerWeek: averagePerWeek.toFixed(1)
+    averagePerWeek: averagePerWeek.toFixed(1),
+    totalToday,
+    totalLastWeekSameDay
   };
 }
 
