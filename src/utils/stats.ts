@@ -1,5 +1,5 @@
 import type { DrinkEntry } from '../types';
-import { startOfWeek, endOfWeek, differenceInWeeks, isWithinInterval, subWeeks, eachDayOfInterval, format, isSameDay } from 'date-fns';
+import { startOfWeek, endOfWeek, isWithinInterval, subWeeks, eachDayOfInterval, format, isSameDay } from 'date-fns';
 
 export function getStats(entries: DrinkEntry[]) {
   if (entries.length === 0) {
